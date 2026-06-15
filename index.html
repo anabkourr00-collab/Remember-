@@ -3,77 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>My Notes | تذكير يشبه الواتساب - إشعارات سطح المكتب</title>
+    <meta name="theme-color" content="#9b59ff">
+    <link rel="manifest" href="manifest.json">
+    <title>My Notes | تذكير فوري + PWA</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #242424;
-            min-height: 100vh;
-            color: white;
-            font-family: system-ui, 'Segoe UI', 'Tahoma', sans-serif;
-            overflow-x: hidden;
-        }
-
-        .header {
-            width: 100%;
-            height: 75px;
-            background: #9b59ff;
-            box-shadow: 0 2px 12px rgba(155, 89, 255, 0.4);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 25px;
-            z-index: 10;
-        }
-
-        .logo {
-            color: white;
-            font-size: 24px;
-            font-family: 'Pacifico', cursive;
-            user-select: none;
-        }
-
-        .menu-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            border-radius: 12px;
-            transition: 0.2s;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #242424; min-height: 100vh; color: white; font-family: system-ui, 'Segoe UI', 'Tahoma', sans-serif; overflow-x: hidden; }
+        .header { width: 100%; height: 75px; background: #9b59ff; box-shadow: 0 2px 12px rgba(155, 89, 255, 0.4); display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 10; }
+        .logo { color: white; font-size: 24px; font-family: 'Pacifico', cursive; user-select: none; }
+        .menu-btn { background: transparent; border: none; cursor: pointer; width: 44px; height: 44px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; border-radius: 12px; transition: 0.2s; }
         .menu-btn:hover { background: rgba(255, 255, 255, 0.15); }
         .menu-line { width: 26px; height: 3px; background: white; border-radius: 4px; }
-
-        .side-navbar {
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 290px;
-            height: 100vh;
-            background: #1e1e2f;
-            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            display: flex;
-            flex-direction: column;
-            border-left: 2px solid #9b59ff;
-            background: rgba(30, 30, 47, 0.98);
-            backdrop-filter: blur(10px);
-        }
-
+        .side-navbar { position: fixed; top: 0; right: -320px; width: 290px; height: 100vh; background: #1e1e2f; box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5); z-index: 1000; transition: right 0.3s; display: flex; flex-direction: column; border-left: 2px solid #9b59ff; background: rgba(30, 30, 47, 0.98); backdrop-filter: blur(10px); }
         .side-navbar.open { right: 0; }
         .nav-header { padding: 24px 20px 12px; border-bottom: 1px solid #9b59ff60; text-align: center; }
         .nav-header h3 { font-family: 'Pacifico', cursive; font-size: 20px; color: #cdb4ff; }
@@ -83,55 +25,42 @@
         .page-item.active { border-color: #9b59ff; background: #9b59ff30; }
         .page-icon { font-size: 28px; }
         .page-name { font-size: 16px; font-weight: 500; flex: 1; }
-        .add-page-btn { margin: 15px 15px 25px; background: #9b59ff; border: none; border-radius: 40px; padding: 12px; color: white; font-size: 15px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; }
+        .add-page-btn { margin: 15px 15px 25px; background: #9b59ff; border: none; border-radius: 40px; padding: 12px; color: white; font-size: 15px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
         .add-page-btn:hover { background: #b06eff; }
         .overlay-nav { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); z-index: 999; display: none; }
         .overlay-nav.active { display: block; }
-
         .notes-container { padding: 20px 18px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-start; align-items: flex-start; min-height: calc(100vh - 75px); }
         .note-card { width: 140px; height: 60px; background: #2f2f2f; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); transition: transform 0.15s; display: flex; flex-direction: column; border: 1px solid rgba(155, 89, 255, 0.4); cursor: pointer; }
         .note-card:hover { transform: translateY(-2px); border-color: #9b59ff; }
         .note-header { height: 28px; background: #9b59ff; display: flex; justify-content: center; align-items: center; font-family: 'Pacifico', cursive; font-size: 11px; color: white; padding: 0 6px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .note-icon-area { flex: 1; background: #2c2c2c; display: flex; justify-content: center; align-items: center; }
         .icon-display { font-size: 30px; }
-
         .add-btn { position: fixed; bottom: 22px; left: 22px; width: 55px; height: 55px; border: none; border-radius: 50%; background: #9b59ff; color: white; font-size: 34px; cursor: pointer; box-shadow: 0 0 16px rgba(155, 89, 255, 0.7); transition: 0.2s; display: flex; align-items: center; justify-content: center; z-index: 100; }
         .add-btn:hover { transform: scale(1.05); background: #b77cff; }
-
-        /* صفحة التفاصيل */
         .details-overlay { position: fixed; inset: 0; background: #1a1a2e; z-index: 2000; display: none; justify-content: center; align-items: center; overflow-y: auto; padding: 20px; backdrop-filter: blur(8px); }
-        .details-card { background: #2a2a2a; border-radius: 48px; max-width: 650px; width: 100%; border: 2px solid #9b59ff; overflow: hidden; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .details-card { background: #2a2a2a; border-radius: 48px; max-width: 650px; width: 100%; border: 2px solid #9b59ff; overflow: hidden; }
         .details-header { background: #9b59ff; padding: 22px 25px; text-align: center; }
         .details-header h1 { font-family: 'Pacifico', cursive; font-size: 32px; color: white; }
         .details-content { padding: 30px 28px; }
         .details-label { font-family: 'Pacifico', cursive; font-size: 28px; color: #cdb4ff; margin-bottom: 15px; display: block; text-align: center; }
-        .details-text { background: #1e1e2e; padding: 20px; border-radius: 28px; font-size: 18px; line-height: 1.7; color: #f0f0f0; white-space: pre-wrap; border: 1px solid #9b59ff40; min-height: 150px; }
+        .details-text { background: #1e1e2e; padding: 20px; border-radius: 28px; font-size: 18px; line-height: 1.7; color: #f0f0f0; white-space: pre-wrap; border: 1px solid #9b59ff40; }
         .details-close { display: flex; justify-content: center; padding: 10px 28px 30px; }
         .close-details-btn { background: #9b59ff; border: none; border-radius: 50px; padding: 12px 32px; font-size: 18px; font-weight: bold; color: white; cursor: pointer; font-family: 'Pacifico', cursive; }
-
-        /* المودالات */
         .overlay-modal, .overlay-modal-page { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1100; }
-        .modal { width: 500px; max-width: 92%; background: #2a2a2a; border-radius: 36px; border: 1px solid #9b59ff; padding: 22px 20px 26px; animation: fadeSlideUp 0.2s ease-out; max-height: 90vh; overflow-y: auto; }
-        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal { width: 500px; max-width: 92%; background: #2a2a2a; border-radius: 36px; border: 1px solid #9b59ff; padding: 22px 20px 26px; max-height: 90vh; overflow-y: auto; }
         .modal-title { text-align: center; font-size: 24px; margin-bottom: 16px; font-family: 'Pacifico', cursive; color: #cdb4ff; }
         .form-label { display: block; margin-top: 16px; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: #e0e0e0; }
         .form-input, .form-textarea { width: 100%; background: #3c3c3c; color: white; border: 2px solid #6c3eb8; border-radius: 24px; padding: 10px 16px; outline: none; font-size: 0.9rem; font-family: inherit; }
         .form-textarea { border-radius: 20px; resize: vertical; min-height: 80px; }
         .icons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 10px; margin-top: 10px; background: #1f1f1f; padding: 12px 10px; border-radius: 24px; max-height: 180px; overflow-y: auto; }
-        .icon-option { background: #2f2f2f; border-radius: 20px; padding: 8px 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
+        .icon-option { background: #2f2f2f; border-radius: 20px; padding: 8px 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 2px solid transparent; }
         .icon-big-preview { font-size: 32px; }
         .icon-option.selected { border-color: #9b59ff; background: #3a2a5a; }
         .time-hint { font-size: 10px; color: #aaa; margin-top: 4px; }
         .run-btn { width: 100%; margin-top: 22px; padding: 11px; border: none; border-radius: 60px; background: #9b59ff; color: white; font-size: 17px; font-weight: bold; cursor: pointer; }
         .run-btn:hover { background: #b06eff; }
-
-        /* تذكير واتساب */
-        .whatsapp-toast { position: fixed; bottom: 90px; right: 20px; background: #25D366; color: white; padding: 12px 20px; border-radius: 28px; font-weight: bold; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 3000; display: flex; align-items: center; gap: 10px; font-family: system-ui; direction: ltr; animation: slideInRight 0.3s ease; max-width: 300px; border-right: 4px solid #075E54; }
-        .whatsapp-toast::before { content: "💬"; font-size: 20px; }
-        @keyframes slideInRight { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        @media (max-width: 550px) { .note-card { width: 120px; height: 55px; } .details-header h1 { font-size: 26px; } }
+        .install-banner { position: fixed; bottom: 90px; right: 20px; background: #9b59ff; padding: 10px 16px; border-radius: 50px; font-size: 13px; display: flex; align-items: center; gap: 10px; z-index: 200; box-shadow: 0 2px 10px rgba(0,0,0,0.3); cursor: pointer; }
+        @media (max-width: 550px) { .note-card { width: 120px; height: 55px; } }
     </style>
 </head>
 <body>
@@ -143,8 +72,8 @@
 
 <div class="notes-container" id="notesContainer"></div>
 <button class="add-btn" onclick="openModal()">+</button>
+<div id="installBanner" class="install-banner" style="display:none">📲 تثبيت التطبيق (للإشعارات)</div>
 
-<!-- الناف بار -->
 <div class="side-navbar" id="sideNavbar">
     <div class="nav-header"><h3>📚 صفحاتي</h3></div>
     <div class="pages-list" id="pagesList"></div>
@@ -152,17 +81,16 @@
 </div>
 <div class="overlay-nav" id="overlayNav"></div>
 
-<!-- مودال إضافة ملاحظة -->
 <div class="overlay-modal" id="overlayModal">
     <div class="modal">
         <div class="modal-title">📝 ملاحظة جديدة</div>
         <label class="form-label">🏷️ عنوان الملاحظة</label>
         <input type="text" id="noteName" class="form-input" placeholder="مثال: اجتماع مهم">
-        <label class="form-label">📄 التفاصيل (ستظهر عند الضغط على المربع)</label>
+        <label class="form-label">📄 التفاصيل</label>
         <textarea id="noteDetails" class="form-textarea" placeholder="اكتب التفاصيل هنا..."></textarea>
-        <label class="form-label">⏰ وقت التذكير (سيتم إرسال إشعار يشبه الواتساب)</label>
+        <label class="form-label">⏰ وقت التذكير (سيصلك إشعار)</label>
         <input type="datetime-local" id="noteTime" class="form-input">
-        <div class="time-hint">🔔 عند حلول الوقت، سيظهر إشعار سطح المكتب + رسالة خضراء مثل واتساب</div>
+        <div class="time-hint">🔔 عند حلول الوقت، سيظهر إشعار على جهازك</div>
         <label class="form-label">🎨 اختر أيقونة</label>
         <div class="icons-grid" id="iconsGrid"></div>
         <input type="hidden" id="selectedIconValue" value="✍️">
@@ -170,7 +98,6 @@
     </div>
 </div>
 
-<!-- مودال إضافة صفحة -->
 <div class="overlay-modal-page" id="overlayPageModal">
     <div class="modal">
         <div class="modal-title">📖 صفحة جديدة</div>
@@ -183,7 +110,6 @@
     </div>
 </div>
 
-<!-- صفحة التفاصيل -->
 <div class="details-overlay" id="detailsOverlay">
     <div class="details-card">
         <div class="details-header"><h1>التفاصيل</h1></div>
@@ -194,18 +120,14 @@
 
 <script>
     const ICON_LIST = ["✍️","📝","🔧","📐","📏","🧮","∑","∫","√","π","∞","θ","📖","📚","✖️","÷","🧪","⚗️","🔬","🧬","📊","📈","💡","🧠","🎨","🔑","⚡","💻","🔭","🧰","✏️","🖌️","📘","📗","⭐","❤️"];
-
-    let pages = [];
-    let currentPageId = null;
-    let currentSelectedIcon = "✍️";
-    let currentSelectedPageIcon = "📘";
+    let pages = [], currentPageId = null, currentSelectedIcon = "✍️", currentSelectedPageIcon = "📘";
+    let deferredPrompt = null;
 
     function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m] || m)); }
-
-    function saveToLocalStorage() { localStorage.setItem("notes_whatsapp_reminder", JSON.stringify({ pages, currentPageId })); }
+    function saveToLocalStorage() { localStorage.setItem("notes_pwa_final", JSON.stringify({ pages, currentPageId })); }
     
     function loadFromLocalStorage() {
-        const stored = localStorage.getItem("notes_whatsapp_reminder");
+        const stored = localStorage.getItem("notes_pwa_final");
         if (stored) {
             try {
                 const data = JSON.parse(stored);
@@ -267,58 +189,42 @@
     }
 
     function openDetailsPage(note) {
-        const detailsTextDiv = document.getElementById("detailsTextContent");
-        let detailsHtml = note.details && note.details.trim() ? escapeHtml(note.details).replace(/\n/g,'<br>') : "<span style='opacity:0.7;'>📭 لا توجد تفاصيل إضافية</span>";
-        detailsTextDiv.innerHTML = detailsHtml;
+        document.getElementById("detailsTextContent").innerHTML = (note.details && note.details.trim()) ? escapeHtml(note.details).replace(/\n/g,'<br>') : "<span style='opacity:0.7;'>📭 لا توجد تفاصيل</span>";
         document.getElementById("detailsOverlay").style.display = "flex";
     }
     function closeDetails() { document.getElementById("detailsOverlay").style.display = "none"; }
-
     function deleteNoteFromCurrentPage(noteId) {
         const page = pages.find(p => p.id === currentPageId);
         if (page) { const idx = page.notes.findIndex(n => n.id == noteId); if (idx !== -1) { page.notes.splice(idx, 1); saveToLocalStorage(); renderCurrentPageNotes(); showFloatingMessage("🗑️ تم الحذف"); } }
     }
 
-    // إشعار يشبه الواتساب + إشعار سطح المكتب
-    function sendWhatsAppLikeReminder(noteTitle, noteDetails, pageName) {
-        // 1. إشعار سطح المكتب (مثل الواتساب)
+    // إرسال إشعار حقيقي للجهاز
+    function sendDeviceNotification(noteTitle, noteDetails, pageName) {
         if (Notification.permission === "granted") {
-            new Notification("🔔 تذكير واتساب ستايل", {
-                body: `📌 ${noteTitle}\n📄 ${noteDetails ? (noteDetails.length > 50 ? noteDetails.substring(0,50)+"..." : noteDetails) : "لا توجد تفاصيل"}\n📁 ${pageName}`,
-                icon: "https://cdn-icons-png.flaticon.com/512/733/733585.png",
-                silent: false
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification("🔔 تذكير: " + noteTitle, {
+                    body: `📌 ${noteTitle}\n📄 ${noteDetails ? (noteDetails.length > 80 ? noteDetails.substring(0,80)+"..." : noteDetails) : "لا توجد تفاصيل"}\n📁 ${pageName}`,
+                    icon: "https://cdn-icons-png.flaticon.com/512/733/733585.png",
+                    badge: "https://cdn-icons-png.flaticon.com/512/733/733585.png",
+                    vibrate: [200, 100, 200],
+                    silent: false,
+                    requireInteraction: true
+                });
+            }).catch(() => {
+                new Notification("🔔 تذكير: " + noteTitle, { body: `${noteTitle} - ${pageName}`, icon: "https://cdn-icons-png.flaticon.com/512/733/733585.png" });
             });
         } else if (Notification.permission !== "denied") {
             Notification.requestPermission().then(perm => {
-                if (perm === "granted") {
-                    new Notification("🔔 تذكير واتساب ستايل", { body: `${noteTitle} - ${pageName}`, icon: "https://cdn-icons-png.flaticon.com/512/733/733585.png" });
-                }
+                if (perm === "granted") sendDeviceNotification(noteTitle, noteDetails, pageName);
             });
         }
-        
-        // 2. رسالة منبثقة خضراء تشبه واتساب (في أسفل اليمين)
-        const toast = document.createElement("div");
-        toast.className = "whatsapp-toast";
-        toast.innerHTML = `<strong style="margin-left:8px;">🔔 تذكير واتساب</strong><br>📌 ${escapeHtml(noteTitle)}<br>📁 ${escapeHtml(pageName)}`;
-        document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.remove(), 500); }, 5000);
-        
-        // 3. اهتزاز بسيط بالصفحة (اختياري)
-        document.body.style.animation = "shake 0.3s ease";
-        setTimeout(() => { document.body.style.animation = ""; }, 300);
     }
 
-    // إضافة مؤثر اهتزاز
-    const styleShake = document.createElement('style');
-    styleShake.textContent = `@keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }`;
-    document.head.appendChild(styleShake);
-
-    // مراقب التذكيرات (كل 15 ثانية لدقة أفضل)
+    // مراقب التذكيرات
     function startReminderWatcher() {
         setInterval(() => {
             const now = new Date();
             const nowRounded = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), 0);
-            
             for (let page of pages) {
                 for (let note of page.notes) {
                     if (note.reminderTime && note.reminderTime !== null && note.reminderTime !== "") {
@@ -328,11 +234,7 @@
                             if (remRounded.getTime() === nowRounded.getTime() && !note._notified) {
                                 note._notified = true;
                                 saveToLocalStorage();
-                                sendWhatsAppLikeReminder(note.title, note.details || "", page.name);
-                                // إضافة صوت قصير اختياري (ليس ضروريا لكن تجربة أفضل)
-                                try {
-                                    const audio = new Audio('data:audio/wav;base64,U3RlYWx0aCBpcwo='); // صوت صامت، لكن الأفضل عدم إزعاج
-                                } catch(e) {}
+                                sendDeviceNotification(note.title, note.details || "", page.name);
                             } else if (remRounded.getTime() !== nowRounded.getTime() && note._notified) {
                                 note._notified = false;
                                 saveToLocalStorage();
@@ -341,7 +243,7 @@
                     }
                 }
             }
-        }, 15000); // كل 15 ثانية للدقة
+        }, 15000);
     }
 
     function createNote() {
@@ -353,32 +255,17 @@
         const page = pages.find(p => p.id === currentPageId);
         if (!page) { showFloatingMessage("❌ اختر صفحة أولاً"); return; }
         
-        const newNote = {
-            id: Date.now() + Math.random() * 10000,
-            title: title,
-            details: details || "",
-            icon: chosenIcon || "✍️",
-            reminderTime: (hiddenTime && hiddenTime !== "") ? hiddenTime : null,
-            createdAt: new Date().toISOString(),
-            _notified: false
-        };
+        const newNote = { id: Date.now() + Math.random() * 10000, title: title, details: details || "", icon: chosenIcon || "✍️", reminderTime: (hiddenTime && hiddenTime !== "") ? hiddenTime : null, createdAt: new Date().toISOString(), _notified: false };
         page.notes.push(newNote);
         saveToLocalStorage();
         renderCurrentPageNotes();
-        
         document.getElementById("overlayModal").style.display = "none";
         document.getElementById("noteName").value = "";
         document.getElementById("noteDetails").value = "";
         document.getElementById("noteTime").value = "";
         currentSelectedIcon = "✍️";
         renderIconsGrid("iconsGrid", currentSelectedIcon, (icon) => { currentSelectedIcon = icon; });
-        
-        let msg = `✅ تم إضافة "${title}" في ${page.name}`;
-        if (newNote.reminderTime) {
-            const timeStr = new Date(newNote.reminderTime).toLocaleString('ar-EG');
-            msg += ` 🔔 سيتم تذكيرك بطريقة واتساب في ${timeStr}`;
-        }
-        showFloatingMessage(msg);
+        showFloatingMessage(`✅ تم إضافة "${title}"`);
     }
 
     function createNewPage() {
@@ -417,16 +304,23 @@
         });
     }
 
-    function openModal() { if (!currentPageId) { showFloatingMessage("⚠️ اختر صفحة من القائمة أولاً"); return; } document.getElementById("overlayModal").style.display = "flex"; document.getElementById("noteName").value = ""; document.getElementById("noteDetails").value = ""; document.getElementById("noteTime").value = ""; currentSelectedIcon = "✍️"; renderIconsGrid("iconsGrid", currentSelectedIcon, (icon) => { currentSelectedIcon = icon; }); setTimeout(() => document.getElementById("noteName").focus(), 100); }
+    function openModal() { if (!currentPageId) { showFloatingMessage("⚠️ اختر صفحة"); return; } document.getElementById("overlayModal").style.display = "flex"; document.getElementById("noteName").value = ""; document.getElementById("noteDetails").value = ""; document.getElementById("noteTime").value = ""; currentSelectedIcon = "✍️"; renderIconsGrid("iconsGrid", currentSelectedIcon, (icon) => { currentSelectedIcon = icon; }); setTimeout(() => document.getElementById("noteName").focus(), 100); }
     function openAddPageModal() { document.getElementById("overlayPageModal").style.display = "flex"; document.getElementById("pageName").value = ""; currentSelectedPageIcon = "📘"; renderIconsGrid("pageIconsGrid", currentSelectedPageIcon, (icon) => { currentSelectedPageIcon = icon; }); }
     function closeSidebar() { document.getElementById("sideNavbar").classList.remove("open"); document.getElementById("overlayNav").classList.remove("active"); }
     function openSidebar() { document.getElementById("sideNavbar").classList.add("open"); document.getElementById("overlayNav").classList.add("active"); }
-    function showFloatingMessage(msg) { let toast = document.createElement("div"); toast.innerText = msg; toast.style.position = "fixed"; toast.style.bottom = "80px"; toast.style.left = "50%"; toast.style.transform = "translateX(-50%)"; toast.style.backgroundColor = "#9b59ff"; toast.style.color = "white"; toast.style.padding = "6px 18px"; toast.style.borderRadius = "40px"; toast.style.fontSize = "12px"; toast.style.zIndex = "1300"; toast.style.boxShadow = "0 3px 12px black"; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2200); }
+    function showFloatingMessage(msg) { let toast = document.createElement("div"); toast.innerText = msg; toast.style.position = "fixed"; toast.style.bottom = "80px"; toast.style.left = "50%"; toast.style.transform = "translateX(-50%)"; toast.style.backgroundColor = "#9b59ff"; toast.style.color = "white"; toast.style.padding = "6px 18px"; toast.style.borderRadius = "40px"; toast.style.fontSize = "12px"; toast.style.zIndex = "1300"; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2200); }
 
-    // طلب الإذن عند تحميل الصفحة
-    function requestNotificationPermission() { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); }
+    // PWA التثبيت
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installBanner').style.display = 'flex';
+        document.getElementById('installBanner').onclick = () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(() => { document.getElementById('installBanner').style.display = 'none'; deferredPrompt = null; });
+        };
+    });
 
-    // أحداث
     document.getElementById("overlayModal").addEventListener("click", function(e) { if (e.target === this) this.style.display = "none"; });
     document.getElementById("overlayPageModal").addEventListener("click", function(e) { if (e.target === this) this.style.display = "none"; });
     document.getElementById("detailsOverlay").addEventListener("click", function(e) { if (e.target === this) closeDetails(); });
@@ -435,12 +329,14 @@
     document.getElementById("openAddPageModalBtn").addEventListener("click", () => { closeSidebar(); openAddPageModal(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if (document.getElementById("detailsOverlay").style.display === "flex") closeDetails(); document.getElementById("overlayModal").style.display = "none"; document.getElementById("overlayPageModal").style.display = "none"; if (document.getElementById("sideNavbar").classList.contains("open")) closeSidebar(); } });
     
-    window.createNote = createNote;
-    window.openModal = openModal;
-    window.createNewPage = createNewPage;
-    window.closeDetails = closeDetails;
+    window.createNote = createNote; window.openModal = openModal; window.createNewPage = createNewPage; window.closeDetails = closeDetails;
     
-    function init() { loadFromLocalStorage(); requestNotificationPermission(); startReminderWatcher(); renderIconsGrid("iconsGrid", "✍️", (icon) => { currentSelectedIcon = icon; }); renderIconsGrid("pageIconsGrid", "📘", (icon) => { currentSelectedPageIcon = icon; }); }
+    // تسجيل Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registered', reg)).catch(err => console.log('SW failed', err));
+    }
+    
+    function init() { loadFromLocalStorage(); renderIconsGrid("iconsGrid", "✍️", (icon) => { currentSelectedIcon = icon; }); renderIconsGrid("pageIconsGrid", "📘", (icon) => { currentSelectedPageIcon = icon; }); startReminderWatcher(); if (Notification.permission === "default") Notification.requestPermission(); }
     document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
